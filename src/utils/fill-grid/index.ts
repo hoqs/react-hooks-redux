@@ -1,17 +1,12 @@
 import { GRID, NUMBERS } from 'typings'
-import { isInRow, shuffle, isInCol, identifySquare, isInSquare } from 'utils'
-
-const GridExample: GRID = [
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0],
-]
+import {
+  isInRow,
+  shuffle,
+  isInCol,
+  identifySquare,
+  isInSquare,
+  checkGrid,
+} from 'utils'
 
 const numbers: NUMBERS[] = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
@@ -27,16 +22,20 @@ function fillGrid(grid: GRID) {
       shuffle(numbers)
 
       for (let value of numbers) {
-        if (!isInRow({ grid, row, value })) {
+        if (!isInRow({ grid, row, value }))
           if (!isInCol({ col, grid, value })) {
             const square = identifySquare({ col, grid, row })
-            if (!isInSquare({ square, value })) grid[row][col] = value
+            if (!isInSquare({ square, value })) {
+              grid[row][col] = value
+              if (checkGrid(grid)) return true
+              else if (fillGrid(grid)) return true
+            }
           }
-        }
       }
       break
     }
   }
+  grid[row][col] = 0
 }
 
 export default fillGrid
